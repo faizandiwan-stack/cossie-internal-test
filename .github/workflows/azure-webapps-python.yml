@@ -1,0 +1,31 @@
+name: FastAPI Auto Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Docker login to ACR
+      run: |
+        echo "${{ secrets.ACR_PASSWORD }}" | docker login cossieinternaltestacr.azurecr.io \
+          -u ${{ secrets.ACR_USERNAME }} \
+          --password-stdin
+
+    - name: Build and Push Docker Image
+      run: |
+        docker build -t cossieinternaltestacr.azurecr.io/fastapi:latest .
+        docker push cossieinternaltestacr.azurecr.io/fastapi:latest
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: cossie-internal-test-api
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        images: cossieinternaltestacr.azurecr.io/fastapi:latest
