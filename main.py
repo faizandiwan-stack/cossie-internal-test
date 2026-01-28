@@ -16,4 +16,4 @@ def root():
 
 @app.get("/version")
 def version():
-    return {"version": "DEPLOYED AT COMMIT XYZ"}
+    return {"version": "DEPLOYED AT SOLVE USING THE CLI MANUALLY"}
