@@ -14,3 +14,6 @@ def root():
 def root():
     return {"status": "FastAPI running on Azure Using GitHub Action 🚀"}
 
+@app.get("/version")
+def version():
+    return {"version": "DEPLOYED AT COMMIT XYZ"}
